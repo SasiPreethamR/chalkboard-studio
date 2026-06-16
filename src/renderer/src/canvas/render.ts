@@ -36,11 +36,10 @@ export function drawScene(ctx: CanvasRenderingContext2D, s: RenderState): void {
     if (la !== lb) return la - lb
     return a.zIndex - b.zIndex
   })
-  // World objects first (they scroll), then pinned objects on top (they float).
-  for (const obj of ordered) if (!obj.pinned) drawObjectSampled(ctx, obj, s)
+  // Render all objects in layer/zIndex order so pinned objects respect their z-position.
+  for (const obj of ordered) drawObjectSampled(ctx, obj, s)
   if (s.liveStroke) drawStroke(ctx, s.liveStroke, s.camera)
   if (s.liveShape) drawShape(ctx, s.liveShape, s.camera)
-  for (const obj of ordered) if (obj.pinned) drawObjectSampled(ctx, obj, s)
 
   if (s.selectedId && !hidden.has(s.objects.find((o) => o.id === s.selectedId)?.layerId ?? '')) {
     const sel = s.objects.find((o) => o.id === s.selectedId)
