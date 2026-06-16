@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { useScene } from '../state/sceneStore'
 import type { CurveSnapLevel, ShapeKind } from '../types'
 import {
@@ -59,6 +60,35 @@ const SHAPE_KINDS: { id: ShapeKind; name: string; Icon: ComponentType<{ size?: n
   { id: 'arrow', name: 'Arrow', Icon: ArrowIcon },
   { id: 'doubleArrow', name: 'Double arrow', Icon: DoubleArrowIcon }
 ]
+
+function ColorPicker({
+  value,
+  onChange,
+  title = 'Custom color'
+}: {
+  value: string
+  onChange: (c: string) => void
+  title?: string
+}) {
+  const ref = useRef<HTMLInputElement>(null)
+  const isCustom = !PALETTE.includes(value)
+  return (
+    <label
+      className={`swatch swatch-picker ${isCustom ? 'active' : ''}`}
+      title={title}
+      style={{ background: isCustom ? value : undefined }}
+    >
+      <input
+        ref={ref}
+        type="color"
+        value={value.startsWith('#') ? value : '#ffffff'}
+        onChange={(e) => onChange(e.target.value)}
+        style={{ opacity: 0, position: 'absolute', width: 0, height: 0, pointerEvents: 'none' }}
+      />
+      {!isCustom && <span className="swatch-picker-icon">⊕</span>}
+    </label>
+  )
+}
 
 function SizeChips({
   sizes,
@@ -130,6 +160,7 @@ export default function OptionsBar() {
               onClick={() => setPenColor(c)}
             />
           ))}
+          <ColorPicker value={style.color} onChange={setPenColor} title="Custom color" />
         </div>
         <span className="opt-sep" />
         <SizeChips sizes={sizes} value={style.size} onChange={setPenSize} />
@@ -180,6 +211,7 @@ export default function OptionsBar() {
               onClick={() => setTextColor(c)}
             />
           ))}
+          <ColorPicker value={textColor} onChange={setTextColor} title="Custom color" />
         </div>
         <span className="opt-sep" />
         <label className="opt-field">
@@ -236,6 +268,7 @@ export default function OptionsBar() {
               onClick={() => setShapeColor(c)}
             />
           ))}
+          <ColorPicker value={shape.color} onChange={setShapeColor} title="Custom stroke color" />
         </div>
         <span className="opt-sep" />
         <SizeChips sizes={SHAPE_WIDTHS} value={shape.strokeWidth} onChange={setShapeStrokeWidth} />
@@ -255,6 +288,11 @@ export default function OptionsBar() {
               onClick={() => setShapeFill(c)}
             />
           ))}
+          <ColorPicker
+            value={shape.fill ?? '#ffffff'}
+            onChange={setShapeFill}
+            title="Custom fill color"
+          />
         </div>
       </div>
     )

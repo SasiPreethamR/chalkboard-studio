@@ -868,6 +868,28 @@ input[type='range'] {
     var(--panel-2);
 }
 
+/* Color-picker swatch — sits after the preset swatches */
+.swatch-picker {
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed rgba(255,255,255,0.35);
+  border-radius: 4px;
+}
+.swatch-picker.active {
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.45);
+}
+.swatch-picker-icon {
+  font-size: 14px;
+  line-height: 1;
+  color: rgba(255,255,255,0.7);
+  pointer-events: none;
+  user-select: none;
+}
+
 /* Layers panel ----------------------------------------------------------- */
 .layers-panel {
   position: absolute;
