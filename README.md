@@ -132,6 +132,41 @@ Optional:
 
 When these are missing, notarization is skipped automatically.
 
+## CI Notarized Release Builds (GitHub Actions)
+
+This repo includes an automated notarized macOS release workflow:
+
+- [release-macos.yml](.github/workflows/release-macos.yml)
+
+What it does:
+
+1. Runs on tag push like `v0.1.1` (and manual dispatch).
+2. Imports your Apple Developer ID certificate into a temporary keychain.
+3. Builds signed + notarized universal DMG.
+4. Uploads DMGs as workflow artifacts.
+5. Attaches DMGs to the GitHub Release for that tag.
+
+Required GitHub repository secrets:
+
+- `APPLE_ID`
+- `APPLE_APP_SPECIFIC_PASSWORD`
+- `APPLE_TEAM_ID`
+- `APPLE_CERTIFICATE_BASE64` (base64-encoded `.p12` certificate)
+- `APPLE_CERTIFICATE_PASSWORD`
+- `CSC_NAME` (example: `Developer ID Application: Your Name (TEAMID)`)
+
+How to publish a notarized release:
+
+1. Create and push a semver tag:
+
+```bash
+git tag v0.1.1
+git push origin v0.1.1
+```
+
+2. Wait for the `Release macOS (Signed + Notarized)` workflow to finish.
+3. Download notarized DMGs from the release page.
+
 ## Weylus Support
 
 On startup the app attempts to launch Weylus in headless mode (`--no-gui`).
